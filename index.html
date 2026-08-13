@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NEXAPOS — Distribution POS</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230B74DE%22/><text x=%2250%22 y=%2265%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2250%22 font-weight=%22bold%22 fill=%22white%22>N</text></svg>">
+<style>
+:root{--bg:#f4f8ff;--panel:#fff;--text:#12213f;--muted:#6b7a93;--line:#dbe6f5;--primary:#1769e0;--primary2:#4da3ff;--green:#159a68;--red:#dc4b5b;--blue:#1769e0;--shadow:0 10px 30px rgba(20,73,140,.09)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}button{cursor:pointer}
+.app{display:flex;min-height:100vh}.sidebar{width:250px;background:linear-gradient(180deg,#071a36,#0a2b55);color:#fff;padding:20px 14px;position:fixed;inset:0 auto 0 0;z-index:20}.brand{display:flex;gap:10px;align-items:center;padding:5px 10px 24px}.brand-logo{width:42px;height:42px;border-radius:11px;background:#1769e0;display:flex;align-items:center;justify-content:center;font-size:25px;overflow:hidden}.brand-logo img{width:100%;height:100%;object-fit:contain}.brand-icon{font-size:31px}.brand b{font-size:19px}.brand small{display:block;color:#9fc4ef;font-size:10px;margin-top:2px}.nav{display:grid;gap:6px}.nav button{border:0;background:transparent;color:#dbe9ff;text-align:left;padding:12px 13px;border-radius:11px;display:flex;gap:11px;align-items:center}.nav button:hover,.nav button.active{background:#1769e0;color:#fff}.main{margin-left:250px;width:calc(100% - 250px);padding:22px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.top h1{margin:0;font-size:25px}.top p{margin:4px 0 0;color:var(--muted);font-size:13px}.menu{display:none}.page{display:none}.page.active{display:block}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:var(--shadow)}.metric{display:flex;justify-content:space-between}.metric span{color:var(--muted);font-size:12px}.metric strong{display:block;font-size:24px;margin-top:8px}.metric i{font-style:normal;font-size:23px;background:#edf5ff;border-radius:11px;padding:9px;height:45px}.grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:15px;margin-top:15px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.section-head h3{margin:0;font-size:16px}.btn{border:0;border-radius:9px;padding:10px 14px;font-weight:600}.primary{background:var(--primary);color:white}.secondary{background:#f1f3f7;color:#344054}.danger{background:#fff0f0;color:var(--red)}.success{background:#e9f8f1;color:var(--green)}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;font-size:13px}.table th,.table td{padding:11px 9px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}.table th{color:#667085;background:#fafbfc}.badge{padding:4px 8px;border-radius:20px;font-size:11px;background:#f1f3f7}.badge.green{background:#e8f7ef;color:var(--green)}.badge.red{background:#fff0f0;color:var(--red)}.badge.blue{background:#edf3ff;color:var(--blue)}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}.toolbar input,.toolbar select,.form input,.form select,.form textarea{border:1px solid var(--line);background:#fff;border-radius:9px;padding:10px 11px;outline:none;width:100%}.toolbar .search{max-width:300px}.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.formgrid.three{grid-template-columns:repeat(3,1fr)}.form label{display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:#475467}.form .full{grid-column:1/-1}.totalbox{background:#faf7f3;border:1px solid #eadbcd;border-radius:12px;padding:14px}.totalrow{display:flex;justify-content:space-between;margin:7px 0}.totalrow.grand{font-size:18px;font-weight:800;border-top:1px solid #ddc9b7;padding-top:10px}.modal{position:fixed;inset:0;background:#10182888;display:none;align-items:center;justify-content:center;z-index:50;padding:18px}.modal.show{display:flex}.modal-box{background:#fff;border-radius:16px;max-width:760px;width:100%;max-height:92vh;overflow:auto;padding:20px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.modal-head h2{margin:0;font-size:19px}.x{border:0;background:#f2f4f7;border-radius:8px;width:34px;height:34px}.invoice{background:#fff;padding:25px;max-width:800px;margin:auto;border:1px solid #e7e1db;border-radius:14px}.invoice h2{margin:0}.invoice-logo{width:64px;height:64px;object-fit:contain;border-radius:10px}.invoice-brand{display:flex;align-items:center;gap:12px}.invoice-meta{font-size:12px;color:#667085}.invoice-title{font-size:25px;letter-spacing:.5px}.invoice-badge{display:inline-block;background:#edf5ff;color:#1769e0;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:700;margin-top:5px}.invoice-head{display:flex;justify-content:space-between;border-bottom:2px solid #222;padding-bottom:14px;margin-bottom:14px}.invoice .table th{background:#f6f6f6}.text-right{text-align:right!important}.empty{text-align:center;padding:35px;color:var(--muted)}.actions{display:flex;gap:6px}.chartbar{height:190px;display:flex;align-items:end;gap:8px}.bar{flex:1;background:#4da3ff;border-radius:6px 6px 0 0;min-width:12px;position:relative}.bar small{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted)}.notice{padding:12px;border-radius:10px;background:#fff7e8;color:#8a5a00;font-size:12px;margin-bottom:14px}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open{transform:none}.main{margin-left:0;width:100%;padding:15px}.menu{display:block;border:0;background:#fff;border-radius:9px;padding:8px 10px;font-size:20px}.cards{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.top{gap:10px}.formgrid.three{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.invoice{padding:14px;border-radius:10px}.invoice-head{gap:10px;align-items:flex-start}.invoice-title{font-size:18px}.invoice-logo{width:48px;height:48px}.invoice .table{font-size:11px}.invoice .table th,.invoice .table td{padding:8px 5px}.modal-box{padding:14px}.cards{grid-template-columns:1fr 1fr}.formgrid,.formgrid.three{grid-template-columns:1fr}.form .full{grid-column:auto}.top h1{font-size:20px}.toolbar>*{max-width:none!important;flex:1}.card{padding:13px}.metric strong{font-size:20px}}
+@media print{.sidebar,.top,.no-print{display:none!important}.main{margin:0;width:100%;padding:0}.page{display:none!important}.page.printable{display:block!important}.modal{position:static;background:none;padding:0}.modal-box{max-width:none;box-shadow:none}.invoice{padding:0}}
+.app-footer{margin-top:24px;padding:14px 4px 6px;text-align:center;color:#8a94a6;font-size:11px;border-top:1px solid var(--line);font-weight:600;letter-spacing:.25px}.app-footer strong{color:#1769e0}@media(max-width:700px){.app-footer{margin-top:18px;padding-bottom:12px}}
+
+.login-screen{position:fixed;inset:0;z-index:99999;background:radial-gradient(circle at top,#123f7a 0,#071a36 48%,#030b16 100%);display:flex;align-items:center;justify-content:center;padding:20px}
+.login-box{width:min(420px,100%);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(18px);border-radius:24px;padding:34px;box-shadow:0 25px 80px rgba(0,0,0,.45);text-align:center;color:#fff}
+.login-logo{width:78px;height:78px;margin:0 auto 15px;border-radius:20px;background:#1769e0;display:flex;align-items:center;justify-content:center;font-size:42px;overflow:hidden}.login-logo img{width:100%;height:100%;object-fit:contain}
+.login-box h1{margin:0;font-size:27px}.login-box p{margin:7px 0 25px;color:#cfc5bd;font-size:13px}.login-form{text-align:left}.login-form label{display:block;color:#ddd;margin:11px 0 6px;font-size:12px}.login-form input{width:100%;box-sizing:border-box}.login-btn{width:100%;margin-top:18px;justify-content:center}.login-error{color:#ff8b8b;font-size:12px;margin-top:12px;text-align:center}
+.user-chip{display:flex;align-items:center;gap:8px}.user-avatar{width:32px;height:32px;border-radius:50%;background:#1769e0;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+.rights-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:8px}.rights-grid label{display:flex;align-items:center;gap:7px;padding:9px;border:1px solid var(--line);border-radius:10px;font-size:12px;background:var(--surface)}.rights-grid input{width:auto}
+
+/* MOBILE RESPONSIVE */
+*{box-sizing:border-box}html,body{width:100%;max-width:100%;overflow-x:hidden}.menu-open{overflow:hidden}body.menu-open .main{pointer-events:none}body.menu-open .sidebar{pointer-events:auto}.table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}.table{min-width:650px}input,select,textarea,button{max-width:100%}
+@media(max-width:900px){.main{min-width:0}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.content{padding:14px}}
+@media(max-width:700px){.sidebar{position:fixed;left:0;top:0;bottom:0;width:280px;transform:translateX(-105%);transition:transform .25s;z-index:1000;box-shadow:15px 0 40px rgba(0,0,0,.25)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;width:100%;min-width:0}.top{position:sticky;top:0;z-index:100;padding:10px 12px;min-height:64px;flex-wrap:wrap}.top>div:first-child{width:100%}.top h1{font-size:18px!important}.top p{display:none}.top>div:nth-child(2){width:100%;display:grid;grid-template-columns:1fr 1fr;gap:7px}.top .user-chip{position:absolute;right:10px;top:12px}.top .user-chip span,.top .user-chip .btn{display:none}.content{padding:10px}.cards{grid-template-columns:1fr 1fr;gap:9px}.formgrid{grid-template-columns:1fr!important}.modal{padding:8px;align-items:flex-end}.modal-box{width:100%;max-width:100%;max-height:92vh;border-radius:18px 18px 0 0;padding:15px;overflow:auto}.modal-head{position:sticky;top:0;z-index:2}.invoice{width:100%;padding:12px}.invoice-head{flex-direction:column}.invoice-head>div:last-child{text-align:left!important}.login-box{width:100%;padding:25px 18px}.rights-grid{grid-template-columns:1fr 1fr!important}}
+@media(max-width:430px){.cards{grid-template-columns:1fr}.content{padding:8px}.top{padding:9px}.btn{min-height:38px;padding:8px 10px;font-size:12px}.table{min-width:650px;font-size:11px}.table th,.table td{padding:8px 6px;white-space:nowrap}.rights-grid{grid-template-columns:1fr!important}}
+.mobile-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999}@media(max-width:700px){.mobile-backdrop.show{display:block}}
+
+/* NEXAPOS PREMIUM FINAL TOUCHUP */
+html,body{min-height:100%;overflow-x:hidden}
+body{background:var(--bg)}
+.sidebar{height:100dvh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.sidebar::-webkit-scrollbar{width:6px}.sidebar::-webkit-scrollbar-thumb{background:rgba(120,180,255,.35);border-radius:20px}
+.nav{padding-bottom:24px}.main{min-height:100dvh}.top{position:relative;z-index:10}.card{overflow:hidden}.section-head{gap:10px;flex-wrap:wrap}.section-head>h3{min-width:0}.toolbar input,.toolbar select,.form input,.form select,.form textarea{min-width:0}.modal{z-index:5000;overflow-y:auto;overscroll-behavior:contain}.modal-box{position:relative;z-index:5001;overflow-x:hidden;overscroll-behavior:contain}.modal-head{background:#fff}.formgrid>*{min-width:0}.totalbox{overflow:hidden}.invoice{overflow:hidden}.table-wrap{max-width:100%;overscroll-behavior:contain}
+@media(max-width:700px){.sidebar{height:100dvh;max-height:100dvh;padding-bottom:32px}.main{padding-top:8px}.top{position:relative}.modal{align-items:flex-start;padding:10px;overflow-y:auto}.modal-box{margin:auto;max-height:calc(100dvh - 20px);border-radius:18px;overflow-y:auto}.modal-head{position:sticky;top:-1px;padding-bottom:10px;margin-bottom:12px}.section-head{align-items:flex-start}.section-head .btn{margin-left:auto}}
+@media(max-width:430px){.modal{padding:6px}.modal-box{max-height:calc(100dvh - 12px);padding:12px}.modal-head h2{font-size:17px}}
+
+.report-note{margin:4px 0 0;color:var(--muted);font-size:12px}.report-filter-grid{grid-template-columns:repeat(3,1fr)}.report-controls{margin-bottom:15px}.report-controls .section-head{align-items:flex-start}.report-controls .toolbar{margin:0}.report-data th{position:sticky;top:0;z-index:2}.report-data tbody tr:hover{background:#f7fbff}@media(max-width:700px){.report-filter-grid{grid-template-columns:1fr}.report-controls .section-head{flex-direction:column}.report-controls .toolbar{width:100%}.report-controls .toolbar .btn{flex:1}}
+
+/* NEXAPOS FINAL MOBILE POLISH */
+.sidebar{display:flex;flex-direction:column;overflow:hidden}.sidebar .nav{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding-right:3px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}.sidebar .nav::-webkit-scrollbar{width:5px}.sidebar .nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:10px}.sidebar-account{flex:0 0 auto;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.14)}.sidebar-account-user{display:flex;align-items:center;gap:9px;padding:0 5px 9px}.sidebar-account-user b{display:block;font-size:12px;color:#fff;max-width:175px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sidebar-account-user small{display:block;color:#9fc4ef;font-size:10px;margin-top:2px}.sidebar-logout{width:100%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#fff;border-radius:9px;padding:10px 12px;text-align:left;font-weight:700}.sidebar-logout:hover{background:#dc4b5b;border-color:#dc4b5b}.report-controls .section-head>div:first-child{min-width:0}.report-controls .section-head .toolbar{display:flex;gap:8px;flex-wrap:wrap}.report-filter-grid>div{min-width:0}.report-filter-grid input,.report-filter-grid select{min-width:0}.report-filter-grid label{display:block}.report-filter-grid .full-filter{grid-column:1/-1}.report-controls .btn{white-space:nowrap}@media(max-width:700px){.sidebar{width:min(300px,88vw);padding:16px 12px}.sidebar .nav{padding-bottom:4px}.sidebar-account{margin-top:8px}.sidebar-logout{padding:11px}.top{z-index:110}.top .user-chip{display:none}.report-controls{padding:13px}.report-controls .section-head{gap:10px}.report-controls .section-head>div{width:100%}.report-controls .section-head .toolbar{display:grid;grid-template-columns:1fr 1fr;width:100%}.report-controls .section-head .toolbar .btn{width:100%;min-width:0}.report-filter-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important}.report-filter-grid>div:nth-child(1),.report-filter-grid>div:nth-child(2){grid-column:1/-1}.report-filter-grid input,.report-filter-grid select{width:100%;height:42px}.report-filter-grid label{margin-bottom:5px}.report-data{min-width:760px}}@media(max-width:430px){.report-controls .section-head .toolbar{grid-template-columns:1fr}.report-filter-grid{grid-template-columns:1fr!important}.report-filter-grid>div{grid-column:1/-1!important}.sidebar-account-user b{max-width:150px}}
+</style>
+</head>
+<body><div class="mobile-backdrop" id="mobileBackdrop" onclick="closeMobileMenu()"></div>
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <div class="login-logo" id="loginLogo">𝕹</div>
+    <h1 id="loginBusiness">NEXAPOS</h1>
+    <p>Secure Business Login</p>
+    <div class="login-form">
+      <label>Username</label><input id="loginUsername" autocomplete="username" placeholder="Enter username">
+      <label>Password</label><div style="display:flex;gap:7px"><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Enter password" style="flex:1"><button type="button" class="btn small" onclick="togglePassword('loginPassword',this)">Show</button></div>
+      <button class="btn primary login-btn" onclick="doLogin()">Login</button>
+      <div id="loginError"></div>
+    </div>
+  </div>
+</div>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="brand"><div class="brand-logo" id="brandLogo"></div><div><b>NEXAPOS</b><small>Distribution POS</small></div></div>
+  <nav class="nav">
+    <button class="active" data-page="dashboard">📊 Dashboard</button>
+    <button data-page="sales">🧾 Sales</button>
+    <button data-page="purchases">📦 Purchases</button>
+    <button data-page="products">📦 Products / Stock</button>
+    <button data-page="customers">👥 Customers</button>
+    <button data-page="suppliers">🚚 Suppliers</button>
+    <button data-page="payments">💳 Payments / Ledger</button>
+    <button data-page="expenses">💸 Expenses</button>
+    <button data-page="returns">↩️ Returns</button>
+    <button data-page="deliveries">🚚 Deliveries</button>
+    <button data-page="salesmen">👨‍💼 Salesmen</button>
+    <button data-page="warehouses">🏢 Warehouses</button>
+    <button data-page="batches">🏷️ Batches & Expiry</button>
+    <button data-page="cashbook">💵 Cash Book</button>
+    <button data-page="reports">📈 Reports</button>
+    <button data-page="users">🔐 Users & Roles</button>
+    <button data-page="backup">⚙️ Backup & Settings</button>
+  </nav>
+  <div class="sidebar-account">
+    <div class="sidebar-account-user"><div class="user-avatar" id="sideUserAvatar">A</div><div><b id="sideUserName">Admin</b><small>Signed in</small></div></div>
+    <button class="sidebar-logout" onclick="logout()">↪ Logout</button>
+  </div>
+</aside>
+<main class="main">
+<header class="top"><div><button class="menu" id="menu">☰</button><span style="margin-left:8px"></span><h1 id="pageTitle" style="display:inline">Dashboard</h1><p id="pageSub">Distribution business overview and performance</p></div><div><button class="btn secondary" onclick="openSale()">⚡ Quick POS</button><button class="btn primary" onclick="openSale()">＋ New Sale</button></div><div class="user-chip no-print"><div class="user-avatar">U</div><span id="currentUserName">Admin</span><button class="btn small" onclick="logout()">Logout</button></div></header>
+
+<section id="dashboard" class="page active">
+ <div class="cards" id="dashCards"></div>
+ <div class="grid2">
+  <div class="card"><div class="section-head"><h3>Sales — Last 7 Days</h3></div><div class="chartbar" id="salesChart"></div></div>
+  <div class="card"><div class="section-head"><h3>Low Stock</h3><button class="btn secondary" onclick="showPage('products')">View Stock</button></div><div id="lowStock"></div></div>
+ </div>
+ <div class="card" style="margin-top:15px"><div class="section-head"><h3>Recent Sales</h3><button class="btn secondary" onclick="showPage('sales')">All Sales</button></div><div id="recentSales"></div></div>
+</section>
+
+<section id="sales" class="page"><div class="card"><div class="section-head"><h3>Sales Invoices</h3><button class="btn primary" onclick="openSale()">＋ New Sale</button></div><div class="toolbar"><input class="search" id="saleSearch" oninput="renderSales()" placeholder="Search invoice or customer..."><input type="date" id="saleDate" onchange="renderSales()"></div><div id="salesTable"></div></div></section>
+
+<section id="purchases" class="page"><div class="card"><div class="section-head"><h3>Purchase Invoices</h3><button class="btn primary" onclick="openPurchase()">＋ New Purchase</button></div><div class="toolbar"><input class="search" id="purchaseSearch" oninput="renderPurchases()" placeholder="Search invoice or supplier..."></div><div id="purchasesTable"></div></div></section>
+
+<section id="products" class="page"><div class="card"><div class="section-head"><h3>Products & Inventory</h3><button class="btn primary" onclick="openProduct()">＋ Add Product</button></div><div class="toolbar"><input class="search" id="productSearch" oninput="renderProducts()" placeholder="Search product / SKU..."><select id="stockFilter" onchange="renderProducts()"><option value="">All Stock</option><option value="low">Low Stock</option><option value="out">Out of Stock</option></select></div><div id="productsTable"></div></div></section>
+
+<section id="customers" class="page"><div class="card"><div class="section-head"><h3>Customers / Retailers</h3><button class="btn primary" onclick="openCustomer()">＋ Add Customer</button></div><div class="toolbar"><input class="search" id="customerSearch" oninput="renderCustomers()" placeholder="Search customer / shop..."></div><div id="customersTable"></div></div></section>
+
+<section id="suppliers" class="page"><div class="card"><div class="section-head"><h3>Suppliers</h3><button class="btn primary" onclick="openSupplier()">＋ Add Supplier</button></div><div class="toolbar"><input class="search" id="supplierSearch" oninput="renderSuppliers()" placeholder="Search supplier..."></div><div id="suppliersTable"></div></div></section>
+
+<section id="payments" class="page"><div class="card"><div class="section-head"><h3>Payments & Ledger</h3><button class="btn primary" onclick="openPayment()">＋ Record Payment</button></div><div class="toolbar"><select id="ledgerType" onchange="renderPayments()"><option value="customer">Customer Receivables</option><option value="supplier">Supplier Payables</option><option value="all">Payment History</option></select></div><div id="paymentsTable"></div></div></section>
+
+<section id="expenses" class="page"><div class="card"><div class="section-head"><h3>Business Expenses</h3><button class="btn primary" onclick="openExpense()">＋ Add Expense</button></div><div id="expensesTable"></div></div></section>
+
+<section id="returns" class="page"><div class="card"><div class="section-head"><h3>Sales & Purchase Returns</h3><button class="btn primary" onclick="openReturn()">＋ New Return</button></div><div id="returnsTable"></div></div></section>
+
+<section id="deliveries" class="page"><div class="card"><div class="section-head"><h3>Delivery Management</h3><button class="btn primary" onclick="openDelivery()">＋ New Delivery</button></div><div id="deliveriesTable"></div></div></section>
+<section id="salesmen" class="page"><div class="card"><div class="section-head"><h3>Salesmen & Commission</h3><button class="btn primary" onclick="openSalesman()">＋ Add Salesman</button></div><div id="salesmenTable"></div></div></section>
+<section id="warehouses" class="page"><div class="card"><div class="section-head"><h3>Warehouses & Stock Locations</h3><button class="btn primary" onclick="openWarehouse()">＋ Add Warehouse</button></div><div id="warehousesTable"></div></div></section>
+<section id="batches" class="page"><div class="card"><div class="section-head"><h3>Batch & Expiry Management</h3><button class="btn primary" onclick="openBatch()">＋ Add Batch</button></div><div id="batchesTable"></div></div></section>
+<section id="cashbook" class="page"><div class="card"><div class="section-head"><h3>Cash Book</h3><button class="btn primary" onclick="openCashEntry()">＋ Cash Entry</button></div><div id="cashbookTable"></div></div></section>
+<section id="users" class="page"><div class="card"><div class="section-head"><h3>Users & Roles</h3><button class="btn primary" onclick="openUser()">＋ Add User</button></div><div id="usersTable"></div></div></section>
+<section id="reports" class="page">
+<div class="card report-controls no-print">
+  <div class="section-head"><div><h3>Reports & Analytics</h3><p class="report-note">Filter by date, search, report type and sort order. PDF export uses your browser's fast Save as PDF.</p></div><div class="toolbar"><button class="btn primary" onclick="downloadReportPDF()">⬇ Download PDF</button><button class="btn secondary" onclick="exportReportCSV()">⇩ Export CSV</button></div></div>
+  <div class="formgrid report-filter-grid">
+    <div><label>Report</label><select id="reportType" onchange="renderReports()"><option value="overview">Profit & Loss Overview</option><option value="sales">Sales Report</option><option value="purchases">Purchase Report</option><option value="expenses">Expense Report</option><option value="products">Product Sales</option><option value="customers">Customer Outstanding</option><option value="suppliers">Supplier Payables</option><option value="returns">Returns Report</option></select></div>
+    <div><label>Search</label><input id="reportSearch" placeholder="Invoice, customer, supplier, product..." oninput="renderReports()"></div>
+    <div><label>From Date</label><input id="reportFrom" type="date" onchange="renderReports()"></div>
+    <div><label>To Date</label><input id="reportTo" type="date" onchange="renderReports()"></div>
+    <div><label>Sort By</label><select id="reportSort" onchange="renderReports()"><option value="date">Date</option><option value="name">Name</option><option value="amount">Amount</option><option value="qty">Quantity</option><option value="invoice">Invoice</option></select></div>
+    <div><label>Order</label><select id="reportOrder" onchange="renderReports()"><option value="desc">Descending ↓</option><option value="asc">Ascending ↑</option></select></div>
+    <div><label>&nbsp;</label><button class="btn secondary report-reset" onclick="resetReportFilters()">↺ Reset Filters</button></div>
+  </div>
+</div>
+<div class="cards" id="reportCards"></div>
+<div class="card" style="margin-top:15px"><div class="section-head"><h3 id="reportTitle">Report</h3><span id="reportCount" class="badge blue"></span></div><div id="reportTable"></div></div>
+<div class="grid2" style="margin-top:15px"><div class="card"><div class="section-head"><h3>Product Sales Summary</h3></div><div id="productReport"></div></div><div class="card"><div class="section-head"><h3>Customer Outstanding</h3></div><div id="customerReport"></div></div></div>
+</section>
+
+<section id="backup" class="page"><div class="card"><div class="section-head"><h3>Backup & Settings</h3></div><div class="notice">This version stores data locally in your browser. Export a backup regularly before clearing browser data.</div><div class="toolbar"><button class="btn primary" onclick="exportBackup()">⬇ Export Backup</button><label class="btn secondary">⬆ Import Backup<input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(event)"></label><button class="btn danger" onclick="clearData()">Reset All Data</button></div><hr style="border:0;border-top:1px solid var(--line);margin:20px 0"><div class="form formgrid"><div><label>Business Name</label><input id="bizName" value="NEXAPOS Distributors"></div><div><label>Currency</label><input id="currency" value="PKR"></div><div class="full"><label>Invoice Footer</label><textarea id="invoiceFooter" rows="3">Thank you for your business. Powered by NAXACORE</textarea></div></div><button class="btn primary" style="margin-top:12px" onclick="saveSettings()">Save Settings</button></div></section>
+<footer class="app-footer no-print">Powered by <strong>NAXACORE</strong></footer>
+</main></div>
+
+<div class="modal" id="modal"><div class="modal-box"><div class="modal-head"><h2 id="modalTitle"></h2><button class="x" onclick="closeModal()">✕</button></div><div id="modalBody"></div></div></div>
+
+<script>
+const KEY='nexapos_v1';
+let db=JSON.parse(localStorage.getItem(KEY)||'null')||{
+ settings:{business:'NEXAPOS Distributors',currency:'PKR',footer:'Thank you for your business.',logo:'',invoiceTemplate:'Modern',taxRate:0},
+ warehouses:[{id:'w1',name:'Main Warehouse',location:'Karachi'}],
+ batches:[], deliveries:[], salesmen:[], users:[{id:'u1',name:'Administrator',role:'Admin'}], cashbook:[], audit:[],
+ products:[
+  {id:'p1',name:'Almond',sku:'ALM-001',unit:'KG',purchase:2500,sale:2900,stock:85,min:10},
+  {id:'p2',name:'Cashew',sku:'CAS-001',unit:'KG',purchase:3800,sale:4300,stock:42,min:8},
+  {id:'p3',name:'Pistachio',sku:'PIS-001',unit:'KG',purchase:4500,sale:5000,stock:31,min:6},
+  {id:'p4',name:'Raisins',sku:'RAI-001',unit:'KG',purchase:1200,sale:1500,stock:120,min:15},
+  {id:'p5',name:'Walnut',sku:'WAL-001',unit:'KG',purchase:3000,sale:3500,stock:6,min:8}
+ ],
+ customers:[{id:'c1',name:'Al-Madina General Store',phone:'0300-1234567',address:'Karachi',balance:0}],
+ suppliers:[{id:'s1',name:'Premium Nuts Supplier',phone:'0301-5555555',address:'Karachi',balance:0}],
+ sales:[],purchases:[],payments:[],expenses:[],returns:[]
+};
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+db.warehouses=db.warehouses||[{id:'w1',name:'Main Warehouse',location:'Karachi'}];
+db.batches=db.batches||[];db.deliveries=db.deliveries||[];db.salesmen=db.salesmen||[];
+const ALL_RIGHTS={dashboard:true,sales:true,purchases:true,products:true,customers:true,suppliers:true,payments:true,expenses:true,returns:true,deliveries:true,salesmen:true,warehouses:true,batches:true,cashbook:true,reports:true,users:true,settings:true};
+db.cashbook=db.cashbook||[];db.audit=db.audit||[];
+db.users=Array.isArray(db.users)?db.users:[];
+db.users=db.users.map(u=>({...u,username:(u.username||'').trim().toLowerCase(),password:String(u.password??''),rights:{...ALL_RIGHTS,...(u.rights||{})}}));
+let admin=db.users.find(u=>u.username==='admin');
+if(!admin){const oldAdmin=db.users.find(u=>(u.name||'').toLowerCase()==='administrator');if(oldAdmin){oldAdmin.username='admin';oldAdmin.password='admin';oldAdmin.role='Admin';oldAdmin.rights={...ALL_RIGHTS};}else db.users.unshift({id:'u1',name:'Administrator',username:'admin',password:'admin',role:'Admin',rights:{...ALL_RIGHTS}});}else{admin.password='admin';admin.role='Admin';admin.rights={...ALL_RIGHTS,...(admin.rights||{})};}
+save();db.settings.invoiceTemplate=db.settings.invoiceTemplate||'Modern';db.settings.taxRate=db.settings.taxRate||0;db.settings.footer=(db.settings.footer||'Thank you for your business.').replace(/\s*Powered by\s+NAXACORE\s*$/i,'').trim(); if(db.settings.business==='NEXAPOS Distributors'||!db.settings.business) db.settings.business='NEXAPOS Distributors';
+const $=id=>document.getElementById(id);
+const money=n=>`${db.settings.currency} ${Number(n||0).toLocaleString('en-PK',{maximumFractionDigits:2})}`;
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const sum=a=>a.reduce((x,y)=>x+Number(y||0),0);
+function dateStr(d=new Date()){return d.toISOString().slice(0,10)}
+const PAGE_SUBS={dashboard:'Distribution business overview and performance',sales:'Invoices, collections and customer balances',purchases:'Supplier purchases and payables',products:'Weight-based inventory management',customers:'Retailers and customer ledgers',suppliers:'Supplier accounts and balances',payments:'Customer receivables and supplier payables',expenses:'Operating expenses',returns:'Sales and purchase returns',deliveries:'Delivery challans and order status',salesmen:'Salesman performance and commission',warehouses:'Multi-location stock management',batches:'Batch tracking and expiry alerts',cashbook:'Cash, bank and payment movement',reports:'Business performance and stock reports',users:'Users, roles and permissions',backup:'Data protection and business settings'};
+function showPage(id){
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+ const page=$(id);if(!page)return;page.classList.add('active');
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));
+ const b=document.querySelector(`.nav button[data-page="${id}"]`);$('pageTitle').textContent=b?b.textContent.replace(/^.\s*/,''):id;
+ $('pageSub').textContent=PAGE_SUBS[id]||'';
+ if(innerWidth<=700)closeMobileMenu();
+ renderPage(id);
+}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+function toggleMobileMenu(){const sb=$('sidebar'),back=$('mobileBackdrop');const open=!sb.classList.contains('open');sb.classList.toggle('open',open);back.classList.toggle('show',open);document.body.classList.toggle('menu-open',open)}
+$('menu').addEventListener('click',toggleMobileMenu);
+function closeMobileMenu(){const sb=$('sidebar'),back=$('mobileBackdrop');sb.classList.remove('open');back.classList.remove('show');document.body.classList.remove('menu-open')}
+function renderPage(id){switch(id){case'dashboard':renderDashboard();break;case'sales':renderSales();break;case'purchases':renderPurchases();break;case'products':renderProducts();break;case'customers':renderCustomers();break;case'suppliers':renderSuppliers();break;case'payments':renderPayments();break;case'expenses':renderExpenses();break;case'returns':renderReturns();break;case'deliveries':renderDeliveries();break;case'salesmen':renderSalesmen();break;case'warehouses':renderWarehouses();break;case'batches':renderBatches();break;case'cashbook':renderCashbook();break;case'reports':renderReports();break;case'users':renderUsers();break;case'backup':loadSettings();break}}
+function renderAll(){renderPage(document.querySelector('.page.active')?.id||'dashboard')}
+function renderDashboard(){
+ const sales=sum(db.sales.map(x=>x.total)), purchases=sum(db.purchases.map(x=>x.total)), received=sum(db.payments.filter(x=>x.type==='customer').map(x=>x.amount)), paid=sum(db.payments.filter(x=>x.type==='supplier').map(x=>x.amount));
+ const stock=sum(db.products.map(x=>x.stock*x.purchase)), receivable=sum(db.customers.map(x=>x.balance)), payable=sum(db.suppliers.map(x=>x.balance));
+ $('dashCards').innerHTML=[
+  ['Sales',money(sales),'🧾'],['Purchases',money(purchases),'📦'],['Receivable',money(receivable),'💰'],['Stock Value',money(stock),''],['Gross Profit',money(calculateProfit().gross),'📈'],['Cash Net',money(sum(db.cashbook.map(x=>x.direction==='in'?x.amount:-x.amount))),'💵'],['Payable',money(payable),'🚚'],['Low Stock',String(db.products.filter(x=>x.stock<=x.min).length),'⚠️']
+ ].map(x=>`<div class="card metric"><div><span>${x[0]}</span><strong>${x[1]}</strong></div><i>${x[2]}</i></div>`).join('');
+ const days=[];for(let i=6;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);let ds=dateStr(d);days.push({d:ds,v:sum(db.sales.filter(s=>s.date===ds).map(s=>s.total))})}
+ const max=Math.max(...days.map(x=>x.v),1);$('salesChart').innerHTML=days.map(x=>`<div class="bar" style="height:${Math.max(8,x.v/max*150)}px" title="${money(x.v)}"><small>${x.d.slice(5)}</small></div>`).join('');
+ const lows=db.products.filter(x=>x.stock<=x.min);$('lowStock').innerHTML=lows.length?`<div class="table-wrap"><table class="table"><tr><th>Product</th><th>Stock</th><th>Status</th></tr>${lows.map(x=>`<tr><td>${esc(x.name)}</td><td>${x.stock} ${x.unit}</td><td><span class="badge ${x.stock<=0?'red':'red'}">${x.stock<=0?'Out of stock':'Low stock'}</span></td></tr>`).join('')}</table></div>`:'<div class="empty">All products are above minimum stock.</div>';
+ $('recentSales').innerHTML=db.sales.length?tableSales(db.sales.slice(-6).reverse()):'<div class="empty">No sales yet. Create your first sale.</div>';
+}
+function tableSales(arr){return `<div class="table-wrap"><table class="table"><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Total</th><th>Paid</th><th>Balance</th><th></th></tr>${arr.map(s=>`<tr><td><b>${s.no}</b></td><td>${s.date}</td><td>${esc(nameOf(db.customers,s.customer))}</td><td>${money(s.total)}</td><td>${money(s.paid)}</td><td><span class="badge ${s.balance?'red':'green'}">${money(s.balance)}</span></td><td><button class="btn secondary" onclick="viewInvoice('${s.id}')">View</button></td></tr>`).join('')}</table></div>`}
+function nameOf(arr,id){return arr.find(x=>x.id===id)?.name||'Walk-in'}
+function renderSales(){let q=($('saleSearch')?.value||'').toLowerCase(),d=$('saleDate')?.value||'';let a=db.sales.filter(s=>(!q||s.no.toLowerCase().includes(q)||nameOf(db.customers,s.customer).toLowerCase().includes(q))&&(!d||s.date===d));$('salesTable').innerHTML=a.length?tableSales(a.slice().reverse()):'<div class="empty">No sales found.</div>'}
+function renderPurchases(){let q=($('purchaseSearch')?.value||'').toLowerCase();let a=db.purchases.filter(s=>!q||s.no.toLowerCase().includes(q)||nameOf(db.suppliers,s.supplier).toLowerCase().includes(q));$('purchasesTable').innerHTML=a.length?`<div class="table-wrap"><table class="table"><tr><th>Invoice</th><th>Date</th><th>Supplier</th><th>Total</th><th>Paid</th><th>Balance</th><th></th></tr>${a.slice().reverse().map(s=>`<tr><td>${s.no}</td><td>${s.date}</td><td>${esc(nameOf(db.suppliers,s.supplier))}</td><td>${money(s.total)}</td><td>${money(s.paid)}</td><td>${money(s.balance)}</td><td><button class="btn secondary" onclick="viewPurchase('${s.id}')">View</button></td></tr>`).join('')}</table></div>`:'<div class="empty">No purchases found.</div>'}
+function renderProducts(){let q=($('productSearch')?.value||'').toLowerCase(),f=$('stockFilter')?.value||'';let a=db.products.filter(p=>(!q||p.name.toLowerCase().includes(q)||p.sku.toLowerCase().includes(q))&&(!f||(f==='low'&&p.stock<=p.min)||(f==='out'&&p.stock<=0)));$('productsTable').innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Product</th><th>SKU</th><th>Unit</th><th>Purchase</th><th>Retail</th><th>Wholesale</th><th>Stock</th><th>Value</th><th>Action</th></tr>${a.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.sku)}</td><td>${p.unit}</td><td>${money(p.purchase)}</td><td>${money(p.sale)}</td><td>${money(p.wholesale||p.sale)}</td><td><span class="badge ${p.stock<=p.min?'red':'green'}">${p.stock} ${p.unit}</span></td><td>${money(p.stock*p.purchase)}</td><td class="actions"><button class="btn secondary" onclick="editProduct('${p.id}')">Edit</button><button class="btn danger" onclick="deleteProduct('${p.id}')">Delete</button></td></tr>`).join('')}</table></div>`}
+function renderCustomers(){let q=($('customerSearch')?.value||'').toLowerCase();let a=db.customers.filter(x=>!q||x.name.toLowerCase().includes(q)||x.phone.includes(q));$('customersTable').innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Customer / Shop</th><th>Phone</th><th>Address</th><th>Receivable</th><th>Action</th></tr>${a.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${esc(x.phone)}</td><td>${esc(x.address)}</td><td><span class="badge ${x.balance?'red':'green'}">${money(x.balance)}</span></td><td><button class="btn secondary" onclick="ledgerCustomer('${x.id}')">Ledger</button></td></tr>`).join('')}</table></div>`}
+function renderSuppliers(){let q=($('supplierSearch')?.value||'').toLowerCase();let a=db.suppliers.filter(x=>!q||x.name.toLowerCase().includes(q)||x.phone.includes(q));$('suppliersTable').innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Supplier</th><th>Phone</th><th>Address</th><th>Payable</th><th>Action</th></tr>${a.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${esc(x.phone)}</td><td>${esc(x.address)}</td><td><span class="badge ${x.balance?'red':'green'}">${money(x.balance)}</span></td><td><button class="btn secondary" onclick="ledgerSupplier('${x.id}')">Ledger</button></td></tr>`).join('')}</table></div>`}
+function renderPayments(){let type=$('ledgerType')?.value||'customer';if(type==='customer'){let a=db.customers.filter(x=>x.balance);$('paymentsTable').innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Customer</th><th>Outstanding</th><th>Action</th></tr>${a.map(x=>`<tr><td>${esc(x.name)}</td><td>${money(x.balance)}</td><td><button class="btn success" onclick="openPayment('customer','${x.id}')">Receive Payment</button></td></tr>`).join('')}</table></div>`||''}else if(type==='supplier'){let a=db.suppliers.filter(x=>x.balance);$('paymentsTable').innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Supplier</th><th>Payable</th><th>Action</th></tr>${a.map(x=>`<tr><td>${esc(x.name)}</td><td>${money(x.balance)}</td><td><button class="btn success" onclick="openPayment('supplier','${x.id}')">Pay Supplier</button></td></tr>`).join('')}</table></div>`}else{$('paymentsTable').innerHTML=`<div class="table-wrap"><table class="table"><tr><th>Date</th><th>Type</th><th>Party</th><th>Method</th><th>Amount</th></tr>${db.payments.slice().reverse().map(x=>`<tr><td>${x.date}</td><td>${x.type}</td><td>${esc(nameOf(x.type==='customer'?db.customers:db.suppliers,x.party))}</td><td>${x.method}</td><td>${money(x.amount)}</td></tr>`).join('')}</table></div>`}}
+function renderExpenses(){$('expensesTable').innerHTML=db.expenses.length?`<div class="table-wrap"><table class="table"><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th></tr>${db.expenses.slice().reverse().map(x=>`<tr><td>${x.date}</td><td>${esc(x.category)}</td><td>${esc(x.description)}</td><td>${money(x.amount)}</td></tr>`).join('')}</table></div>`:'<div class="empty">No expenses recorded.</div>'}
+function renderReturns(){$('returnsTable').innerHTML=db.returns.length?`<div class="table-wrap"><table class="table"><tr><th>Date</th><th>Type</th><th>Invoice</th><th>Product</th><th>Qty</th><th>Amount</th></tr>${db.returns.slice().reverse().map(x=>`<tr><td>${x.date}</td><td>${x.type}</td><td>${x.invoice}</td><td>${esc(nameOf(db.products,x.product))}</td><td>${x.qty}</td><td>${money(x.amount)}</td></tr>`).join('')}</table></div>`:'<div class="empty">No returns recorded.</div>'}
+function dateInRange(date,from,to){return (!from||date>=from)&&(!to||date<=to)}
+function calculateProfit(salesArr=db.sales,purchaseArr=db.purchases,expenseArr=db.expenses,returnsArr=db.returns){
+ let revenue=0,cogs=0,purchaseCost=0,expense=0;
+ salesArr.forEach(s=>{
+   const netSale=Math.max(0,(+s.subtotal||sum((s.items||[]).map(i=>(+i.qty||0)*(+i.rate||0))))-(+s.discount||0));
+   revenue+=netSale;
+   cogs+=sum((s.items||[]).map(i=>(+i.qty||0)*(+i.cost||0)));
+ });
+ purchaseArr.forEach(p=>purchaseCost+=(+p.total||sum((p.items||[]).map(i=>(+i.qty||0)*(+i.rate||0)))));
+ expenseArr.forEach(e=>expense+=(+e.amount||0));
+ let salesReturn=0,purchaseReturn=0,salesReturnCost=0;
+ (returnsArr||[]).forEach(r=>{
+   let amount=+r.amount||0;
+   if(!amount){
+     if(r.type==='Sales Return'){
+       const sale=db.sales.find(s=>s.no===r.invoice); const item=sale?.items?.find(i=>i.product===r.product); amount=(+r.qty||0)*(+(item?.rate||0));
+     }else if(r.type==='Purchase Return'){
+       const pur=db.purchases.find(x=>x.no===r.invoice); const item=pur?.items?.find(i=>i.product===r.product); amount=(+r.qty||0)*(+(item?.rate||0));
+     }
+   }
+   if(r.type==='Sales Return'){
+     salesReturn+=amount;
+     const prod=db.products.find(p=>p.id===r.product);
+     salesReturnCost+=(+r.qty||0)*(+prod?.purchase||0);
+   }else if(r.type==='Purchase Return') purchaseReturn+=amount;
+ });
+ revenue=Math.max(0,revenue-salesReturn);
+ cogs=Math.max(0,cogs-salesReturnCost);
+ const gross=revenue-cogs;
+ return {revenue,cogs,purchaseCost:Math.max(0,purchaseCost-purchaseReturn),purchaseReturn,salesReturn,expense,gross,net:gross-expense};
+}
+function reportDates(){return {from:$('reportFrom')?.value||'',to:$('reportTo')?.value||''}}
+function reportFiltered(arr){let {from,to}=reportDates();return arr.filter(x=>dateInRange(x.date,from,to))}
+function reportCompare(a,b,field,dir){let av=a[field],bv=b[field];if(field==='date'||field==='invoice'||field==='name')return String(av??'').localeCompare(String(bv??''))*dir;return ((+av||0)-(+bv||0))*dir}
+function reportSortRows(arr,field,dir){return arr.slice().sort((a,b)=>reportCompare(a,b,field,dir))}
+function reportSearchMatch(text){let q=($('reportSearch')?.value||'').trim().toLowerCase();return !q||String(text||'').toLowerCase().includes(q)}
+function renderReports(){
+ const type=$('reportType')?.value||'overview', order=$('reportOrder')?.value==='asc'?1:-1, sort=$('reportSort')?.value||'date';
+ const from=$('reportFrom')?.value||'',to=$('reportTo')?.value||'';
+ const sales=reportFiltered(db.sales), purchases=reportFiltered(db.purchases), expenses=reportFiltered(db.expenses), returns=reportFiltered(db.returns);
+ const profit=calculateProfit(sales,purchases,expenses,returns);
+ $('reportCards').innerHTML=[['Net Revenue',profit.revenue],['COGS',profit.cogs],['Gross Profit',profit.gross],['Expenses',profit.expense],['Net Profit',profit.net],['Purchases',profit.purchaseCost]].map((x,i)=>`<div class="card metric"><div><span>${x[0]}</span><strong>${money(x[1])}</strong></div><i>${['💰','📦','📈','💸','🏆','🛒'][i]}</i></div>`).join('');
+ let title='Report',rows=[],headers=[],html='';
+ if(type==='overview'){
+   title='Profit & Loss Overview';
+   headers=['Metric','Amount'];
+   rows=[['Net Revenue',profit.revenue],['Cost of Goods Sold',profit.cogs],['Gross Profit',profit.gross],['Operating Expenses',profit.expense],['Net Profit',profit.net],['Purchase Cost (after returns)',profit.purchaseCost],['Sales Returns',profit.salesReturn],['Purchase Returns',profit.purchaseReturn]];
+   html=`<div class="table-wrap"><table class="table report-data"><thead><tr><th>Metric</th><th>Amount</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${r[0]}</b></td><td>${money(r[1])}</td></tr>`).join('')}</tbody></table></div>`;
+ } else if(type==='sales'){
+   title='Sales Report';let a=sales.filter(s=>reportSearchMatch(`${s.no} ${nameOf(db.customers,s.customer)}`));a=reportSortRows(a,sort==='name'?'name':sort==='amount'?'amount':sort==='invoice'?'invoice':'date',order);headers=['Invoice','Date','Customer','Subtotal','Discount','Tax','Total','Paid','Balance'];
+   html=`<div class="table-wrap"><table class="table report-data"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${a.map(s=>`<tr><td>${esc(s.no)}</td><td>${s.date}</td><td>${esc(nameOf(db.customers,s.customer))}</td><td>${money(s.subtotal||0)}</td><td>${money(s.discount||0)}</td><td>${money(s.tax||0)}</td><td>${money(s.total)}</td><td>${money(s.paid)}</td><td>${money(s.balance)}</td></tr>`).join('')}</tbody></table></div>`;rows=a.map(s=>[s.no,s.date,nameOf(db.customers,s.customer),s.subtotal||0,s.discount||0,s.tax||0,s.total,s.paid,s.balance]);
+ } else if(type==='purchases'){
+   title='Purchase Report';let a=purchases.filter(p=>reportSearchMatch(`${p.no} ${nameOf(db.suppliers,p.supplier)}`));a=reportSortRows(a,sort==='name'?'name':sort==='amount'?'amount':sort==='invoice'?'invoice':'date',order);headers=['Invoice','Date','Supplier','Total','Paid','Balance'];
+   html=`<div class="table-wrap"><table class="table report-data"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${a.map(p=>`<tr><td>${esc(p.no)}</td><td>${p.date}</td><td>${esc(nameOf(db.suppliers,p.supplier))}</td><td>${money(p.total)}</td><td>${money(p.paid)}</td><td>${money(p.balance)}</td></tr>`).join('')}</tbody></table></div>`;rows=a.map(p=>[p.no,p.date,nameOf(db.suppliers,p.supplier),p.total,p.paid,p.balance]);
+ } else if(type==='expenses'){
+   title='Expense Report';let a=expenses.filter(e=>reportSearchMatch(`${e.category} ${e.description}`));a=reportSortRows(a,sort==='name'?'name':sort==='amount'?'amount':'date',order);headers=['Date','Category','Description','Amount'];
+   html=`<div class="table-wrap"><table class="table report-data"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${a.map(e=>`<tr><td>${e.date}</td><td>${esc(e.category)}</td><td>${esc(e.description)}</td><td>${money(e.amount)}</td></tr>`).join('')}</tbody></table></div>`;rows=a.map(e=>[e.date,e.category,e.description,e.amount]);
+ } else if(type==='products'){
+   title='Product Sales Report';let map={};sales.forEach(s=>(s.items||[]).forEach(i=>{let p=db.products.find(p=>p.id===i.product);let key=i.product;map[key]??={name:p?.name||'Unknown',qty:0,revenue:0,cogs:0};map[key].qty+=+i.qty||0;map[key].revenue+=(+i.qty||0)*(+i.rate||0);map[key].cogs+=(+i.qty||0)*(+i.cost||0)}));let a=Object.values(map).filter(x=>reportSearchMatch(x.name));a=reportSortRows(a,sort==='name'?'name':sort==='qty'?'qty':'revenue',order);headers=['Product','Qty Sold','Sales','COGS','Gross Profit'];
+   html=`<div class="table-wrap"><table class="table report-data"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${a.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${x.qty}</td><td>${money(x.revenue)}</td><td>${money(x.cogs)}</td><td>${money(x.revenue-x.cogs)}</td></tr>`).join('')}</tbody></table></div>`;rows=a.map(x=>[x.name,x.qty,x.revenue,x.cogs,x.revenue-x.cogs]);
+ } else if(type==='customers'){
+   title='Customer Outstanding';let a=db.customers.filter(c=>reportSearchMatch(`${c.name} ${c.phone}`));a=reportSortRows(a,sort==='name'?'name':'amount',order);headers=['Customer','Phone','Outstanding'];
+   html=`<div class="table-wrap"><table class="table report-data"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${a.map(c=>`<tr><td><b>${esc(c.name)}</b></td><td>${esc(c.phone)}</td><td>${money(c.balance)}</td></tr>`).join('')}</tbody></table></div>`;rows=a.map(c=>[c.name,c.phone,c.balance]);
+ } else if(type==='suppliers'){
+   title='Supplier Payables';let a=db.suppliers.map(s=>({name:s.name,phone:s.phone,amount:+s.balance||0})).filter(s=>reportSearchMatch(`${s.name} ${s.phone}`));a=reportSortRows(a,sort==='name'?'name':'amount',order);headers=['Supplier','Phone','Payable'];
+   html=`<div class="table-wrap"><table class="table report-data"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${a.map(s=>`<tr><td><b>${esc(s.name)}</b></td><td>${esc(s.phone)}</td><td>${money(s.amount)}</td></tr>`).join('')}</tbody></table></div>`;rows=a.map(s=>[s.name,s.phone,s.amount]);
+ } else {
+   title='Returns Report';let a=returns.filter(r=>reportSearchMatch(`${r.type} ${r.invoice} ${nameOf(db.products,r.product)}`));a=reportSortRows(a,sort==='name'?'name':sort==='amount'?'amount':sort==='qty'?'qty':'date',order);headers=['Date','Type','Invoice','Product','Qty','Amount'];
+   html=`<div class="table-wrap"><table class="table report-data"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${a.map(r=>`<tr><td>${r.date}</td><td>${esc(r.type)}</td><td>${esc(r.invoice)}</td><td>${esc(nameOf(db.products,r.product))}</td><td>${r.qty}</td><td>${money(r.amount)}</td></tr>`).join('')}</tbody></table></div>`;rows=a.map(r=>[r.date,r.type,r.invoice,nameOf(db.products,r.product),r.qty,r.amount]);
+ }
+ if(!html || !rows.length && type!=='overview') html='<div class="empty">No records match the selected filters.</div>';
+ $('reportTitle').textContent=title; $('reportCount').textContent=(rows.length||0)+' record(s)'; $('reportTable').innerHTML=html;
+ const map={};sales.forEach(s=>(s.items||[]).forEach(i=>{let p=db.products.find(p=>p.id===i.product);let key=i.product;map[key]??={name:p?.name||'Unknown',qty:0};map[key].qty+=(+i.qty||0)}));let arr=Object.values(map).filter(x=>reportSearchMatch(x.name));arr=reportSortRows(arr,sort==='name'?'name':'qty',order);$('productReport').innerHTML=arr.length?`<div class="table-wrap"><table class="table"><tr><th>Product</th><th>Qty Sold</th></tr>${arr.map(x=>`<tr><td>${esc(x.name)}</td><td>${x.qty}</td></tr>`).join('')}</table></div>`:'<div class="empty">No sales data.</div>';
+ let custRows=db.customers.map(c=>({name:c.name,phone:c.phone,amount:+c.balance||0})).filter(c=>reportSearchMatch(`${c.name} ${c.phone}`));custRows=reportSortRows(custRows,sort==='name'?'name':'amount',order);$('customerReport').innerHTML=custRows.length?`<div class="table-wrap"><table class="table"><tr><th>Customer</th><th>Outstanding</th></tr>${custRows.map(x=>`<tr><td>${esc(x.name)}</td><td>${money(x.amount)}</td></tr>`).join('')}</table></div>`:'<div class="empty">No customers.</div>';
+ window._lastReport={title,headers,rows,from,to};
+}
+function resetReportFilters(){
+  if($('reportType'))$('reportType').value='overview';
+  if($('reportSearch'))$('reportSearch').value='';
+  if($('reportFrom'))$('reportFrom').value='';
+  if($('reportTo'))$('reportTo').value='';
+  if($('reportSort'))$('reportSort').value='date';
+  if($('reportOrder'))$('reportOrder').value='desc';
+  renderReports();
+}
+function downloadReportPDF(){
+ if(!$('reportTable'))return; const r=window._lastReport||{}; const title=r.title||'NEXAPOS Report'; const cards=$('reportCards')?.outerHTML||''; const table=$('reportTable')?.innerHTML||'<div>No data</div>'; const range=(r.from||r.to)?`<p>Period: ${r.from||'All'} to ${r.to||'All'}</p>`:'';
+ const w=window.open('','_blank'); if(!w){alert('Please allow pop-ups for NEXAPOS PDF export.');return;}
+ w.document.write(`<!doctype html><html><head><title>${esc(title)}</title><style>body{font-family:Arial,sans-serif;color:#12213f;padding:24px}h1{margin:0 0 4px}p{color:#667085;font-size:12px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.card{border:1px solid #dbe6f5;border-radius:10px;padding:10px}.metric span{font-size:10px;color:#667085}.metric strong{display:block;font-size:16px;margin-top:5px}.metric i{display:none}.table-wrap{overflow:visible}.table{width:100%;border-collapse:collapse;font-size:11px}.table th,.table td{padding:7px;border:1px solid #dbe6f5;text-align:left}.table th{background:#edf5ff}.footer{text-align:center;margin-top:20px;padding-top:10px;border-top:1px solid #ddd;font-size:10px;color:#667085}@media print{body{padding:10mm}.no-print{display:none!important}}</style></head><body><h1>${esc(db.settings.business||'NEXAPOS')}</h1><p><b>${esc(title)}</b> · Generated ${dateStr()} ${range}</p>${cards}${table}<div class="footer">Powered by NAXACORE</div><script>window.onload=()=>setTimeout(()=>window.print(),120);<\/script></body></html>`); w.document.close();
+}
+function exportReportCSV(){const r=window._lastReport;if(!r||!r.rows?.length){alert('No report data to export.');return}const escCsv=v=>`"${String(v??'').replace(/"/g,'""')}"`;const csv=[r.headers.map(escCsv).join(','),...r.rows.map(row=>row.map(escCsv).join(','))].join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='nexapos-'+(r.title||'report').toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+dateStr()+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function openModal(title,body){$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modal').classList.add('show')}
+function closeModal(){$('modal').classList.remove('show')}
+function openProduct(id=null){let p=id?db.products.find(x=>x.id===id):{name:'',sku:'',unit:'KG',purchase:0,sale:0,stock:0,min:5};openModal(id?'Edit Product':'Add Product',`<div class="form"><div class="formgrid"><div><label>Product Name</label><input id="f_name" value="${esc(p.name)}"></div><div><label>SKU</label><input id="f_sku" value="${esc(p.sku)}"></div><div><label>Unit</label><select id="f_unit"><option ${p.unit==='KG'?'selected':''}>KG</option><option ${p.unit==='GRAM'?'selected':''}>GRAM</option><option ${p.unit==='PACK'?'selected':''}>PACK</option><option ${p.unit==='BOX'?'selected':''}>BOX</option></select></div><div><label>Minimum Stock</label><input id="f_min" type="number" step="0.01" value="${p.min}"></div><div><label>Purchase Rate</label><input id="f_purchase" type="number" step="0.01" value="${p.purchase}"></div><div><label>Retail Rate</label><input id="f_sale" type="number" step="0.01" value="${p.sale}"></div><div><label>Wholesale Rate</label><input id="f_wholesale" type="number" step="0.01" value="${p.wholesale||p.sale}"></div><div><label>Distributor Rate</label><input id="f_distributor" type="number" step="0.01" value="${p.distributor||p.sale}"></div><div><label>Barcode</label><input id="f_barcode" value="${esc(p.barcode||'')}"></div><div class="full"><label>Current Stock</label><input id="f_stock" type="number" step="0.01" value="${p.stock}"></div></div><button class="btn primary" style="margin-top:15px" onclick="saveProduct('${id||''}')">Save Product</button></div>`)}
+function saveProduct(id){let o=({id:id||uid('p'),name:$('f_name').value.trim(),sku:$('f_sku').value.trim(),unit:$('f_unit').value,purchase:+$('f_purchase').value,sale:+$('f_sale').value,wholesale:+$('f_wholesale').value,distributor:+$('f_distributor').value,barcode:$('f_barcode').value.trim(),stock:+$('f_stock').value,min:+$('f_min').value});if(!o.name)return alert('Enter product name');if(id)Object.assign(db.products.find(x=>x.id===id),o);else db.products.push(o);save();closeModal();renderAll()}
+function editProduct(id){openProduct(id)}function deleteProduct(id){if(confirm('Delete this product?')){db.products=db.products.filter(x=>x.id!==id);save();renderAll()}}
+function openCustomer(){openModal('Add Customer',`<div class="form"><div class="formgrid"><div><label>Customer / Shop Name</label><input id="c_name"></div><div><label>Phone</label><input id="c_phone"></div><div class="full"><label>Address</label><input id="c_address"></div></div><button class="btn primary" style="margin-top:15px" onclick="saveCustomer()">Save Customer</button></div>`)}
+function saveCustomer(){db.customers.push({id:uid('c'),name:$('c_name').value.trim(),phone:$('c_phone').value.trim(),address:$('c_address').value.trim(),balance:0});save();closeModal();renderAll()}
+function openSupplier(){openModal('Add Supplier',`<div class="form"><div class="formgrid"><div><label>Supplier Name</label><input id="s_name"></div><div><label>Phone</label><input id="s_phone"></div><div class="full"><label>Address</label><input id="s_address"></div></div><button class="btn primary" style="margin-top:15px" onclick="saveSupplier()">Save Supplier</button></div>`)}
+function saveSupplier(){db.suppliers.push({id:uid('s'),name:$('s_name').value.trim(),phone:$('s_phone').value.trim(),address:$('s_address').value.trim(),balance:0});save();closeModal();renderAll()}
+function productOptions(){return db.products.map(p=>`<option value="${p.id}">${esc(p.name)} — ${p.stock} ${p.unit} @ ${money(p.sale)}</option>`).join('')}
+function customerOptions(){return db.customers.map(c=>`<option value="${c.id}">${esc(c.name)} ${c.balance?'— Due '+money(c.balance):''}</option>`).join('')}
+function supplierOptions(){return db.suppliers.map(c=>`<option value="${c.id}">${esc(c.name)} ${c.balance?'— Due '+money(c.balance):''}</option>`).join('')}
+function openSale(){
+ let rows=`<tr class="sale-row"><td><select class="ri">${productOptions()}</select></td><td><input class="rq" type="number" min=".01" step=".01" value="1" oninput="calcSale()"></td><td><input class="rr" type="number" step=".01" value="0" oninput="calcSale()"></td><td class="ra">0</td><td><button class="btn danger" onclick="this.closest('tr').remove();calcSale()">✕</button></td></tr>`;
+ openModal('New Sale Invoice',`<div class="form"><div class="formgrid"><div><label>Customer / Retailer</label><select id="saleCustomer">${customerOptions()}</select></div><div><label>Date</label><input id="saleDateF" type="date" value="${dateStr()}"></div><div class="full"><div class="table-wrap"><table class="table"><thead><tr><th>Product</th><th>Qty</th><th>Rate</th><th>Amount</th><th></th></tr></thead><tbody id="saleRows">${rows}</tbody></table></div><button class="btn secondary" style="margin-top:9px" onclick="addSaleRow()">＋ Add Item</button></div><div><label>Discount</label><input id="saleDiscount" type="number" value="0" oninput="calcSale()"></div><div><label>Advance / Paid</label><input id="salePaid" type="number" value="0" oninput="calcSale()"></div><div><label>Salesman</label><select id="saleSalesman"><option value="">None</option>${db.salesmen.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></div><div><label>Payment Method</label><select id="saleMethod"><option>Cash</option><option>Bank</option><option>Easypaisa</option><option>JazzCash</option><option>Credit</option></select></div><div class="totalbox"><div class="totalrow"><span>Subtotal</span><b id="saleSub">0</b></div><div class="totalrow"><span>Discount</span><b id="saleDisc">0</b></div><div class="totalrow"><span>Tax</span><b id="saleTax">0</b></div><div class="totalrow grand"><span>Total</span><b id="saleTotal">0</b></div><div class="totalrow"><span>Balance</span><b id="saleBal">0</b></div></div></div><button class="btn primary" style="margin-top:15px" onclick="saveSale()">Save Sale & Print</button></div>`);
+ document.querySelector('.ri').onchange=function(){let p=db.products.find(x=>x.id===this.value);this.closest('tr').querySelector('.rr').value=p.sale;calcSale()};calcSale()
+}
+function addSaleRow(){let tr=document.createElement('tr');tr.className='sale-row';tr.innerHTML=`<td><select class="ri">${productOptions()}</select></td><td><input class="rq" type="number" min=".01" step=".01" value="1" oninput="calcSale()"></td><td><input class="rr" type="number" step=".01" value="0" oninput="calcSale()"></td><td class="ra">0</td><td><button class="btn danger" onclick="this.closest('tr').remove();calcSale()">✕</button></td>`;$('saleRows').appendChild(tr);tr.querySelector('.ri').onchange=function(){let p=db.products.find(x=>x.id===this.value);tr.querySelector('.rr').value=p.sale;calcSale()};let p=db.products.find(x=>x.id===tr.querySelector('.ri').value);tr.querySelector('.rr').value=p.sale;calcSale()}
+function calcSale(){let sub=0;document.querySelectorAll('.sale-row').forEach(r=>{let a=(+r.querySelector('.rq').value||0)*(+r.querySelector('.rr').value||0);r.querySelector('.ra').textContent=money(a);sub+=a});let dis=+$('saleDiscount').value||0,total=Math.max(0,sub-dis),paid=+$('salePaid').value||0;$('saleSub').textContent=money(sub);$('saleDisc').textContent=money(dis);$('saleTax').textContent=money((sub-dis)*(+db.settings.taxRate||0)/100);$('saleTotal').textContent=money(total);$('saleBal').textContent=money(Math.max(0,total-paid))}
+function saveSale(){
+ let items=[],ok=true;document.querySelectorAll('.sale-row').forEach(r=>{let p=db.products.find(x=>x.id===r.querySelector('.ri').value),q=+r.querySelector('.rq').value||0,rate=+r.querySelector('.rr').value||0;if(!p||q<=0||q>p.stock)ok=false;else items.push({product:p.id,qty:q,rate,cost:p.purchase})});if(!ok||!items.length)return alert('Check products, quantities and available stock.');
+ let sub=sum(items.map(i=>i.qty*i.rate)),dis=+$('saleDiscount').value||0,tax=Math.max(0,(sub-dis)*(+db.settings.taxRate||0)/100),total=Math.max(0,sub-dis+tax),paid=Math.min(total,+$('salePaid').value||0),balance=total-paid,c=db.customers.find(x=>x.id===$('saleCustomer').value);
+ items.forEach(i=>db.products.find(p=>p.id===i.product).stock-=i.qty);c.balance+=balance;
+ let s={id:uid('sale'),no:'S-'+new Date().getFullYear()+'-'+String(db.sales.length+1).padStart(5,'0'),date:$('saleDateF').value,customer:c.id,salesman:$('saleSalesman').value,items,subtotal:sub,discount:dis,tax,total,paid,balance,method:$('saleMethod').value};db.sales.push(s);if(paid)db.payments.push({id:uid('pay'),date:s.date,type:'customer',party:c.id,amount:paid,method:s.method,ref:s.no});save();closeModal();renderAll();viewInvoice(s.id)
+}
+function openPurchase(){openModal('New Purchase',`<div class="form"><div class="formgrid"><div><label>Supplier</label><select id="purSupplier">${supplierOptions()}</select></div><div><label>Date</label><input id="purDate" type="date" value="${dateStr()}"></div><div><label>Product</label><select id="purProduct">${productOptions()}</select></div><div><label>Quantity</label><input id="purQty" type="number" step=".01" value="1"></div><div><label>Purchase Rate</label><input id="purRate" type="number" step=".01" value="0"></div><div><label>Paid / Advance</label><input id="purPaid" type="number" step=".01" value="0"></div><div><label>Payment Method</label><select id="purMethod"><option>Cash</option><option>Bank</option><option>Easypaisa</option><option>JazzCash</option><option>Credit</option></select></div><div class="totalbox"><div class="totalrow grand"><span>Total</span><b id="purTotal">0</b></div><div class="totalrow"><span>Balance</span><b id="purBal">0</b></div></div></div><button class="btn primary" style="margin-top:15px" onclick="savePurchase()">Save Purchase</button></div>`);let p=db.products[0];$('purRate').value=p?.purchase||0;$('purProduct').onchange=()=>{$('purRate').value=db.products.find(x=>x.id===$('purProduct').value)?.purchase||0;calcPur()};['purQty','purRate','purPaid'].forEach(id=>$(id).oninput=calcPur);calcPur()}
+function calcPur(){let t=(+$('purQty').value||0)*(+$('purRate').value||0),p=+$('purPaid').value||0;$('purTotal').textContent=money(t);$('purBal').textContent=money(Math.max(0,t-p))}
+function savePurchase(){let s=db.suppliers.find(x=>x.id===$('purSupplier').value),p=db.products.find(x=>x.id===$('purProduct').value),q=+$('purQty').value||0,r=+$('purRate').value||0,total=q*r,paid=Math.min(total,+$('purPaid').value||0);if(!s||!p||q<=0)return alert('Complete purchase details');p.stock+=q;p.purchase=r;s.balance+=total-paid;let x={id:uid('pur'),no:'P-'+new Date().getFullYear()+'-'+String(db.purchases.length+1).padStart(5,'0'),date:$('purDate').value,supplier:s.id,items:[{product:p.id,qty:q,rate:r}],total,paid,balance:total-paid,method:$('purMethod').value};db.purchases.push(x);if(paid)db.payments.push({id:uid('pay'),date:x.date,type:'supplier',party:s.id,amount:paid,method:x.method,ref:x.no});save();closeModal();renderAll();alert('Purchase saved successfully.')}
+function openPayment(type='customer',party=''){openModal('Record Payment',`<div class="form"><div class="formgrid"><div><label>Account Type</label><select id="payType" onchange="switchPayParty()"><option value="customer" ${type==='customer'?'selected':''}>Customer Receivable</option><option value="supplier" ${type==='supplier'?'selected':''}>Supplier Payable</option></select></div><div><label>Party</label><select id="payParty">${type==='customer'?customerOptions():supplierOptions()}</select></div><div><label>Amount</label><input id="payAmount" type="number" step=".01"></div><div><label>Method</label><select id="payMethod"><option>Cash</option><option>Bank</option><option>Easypaisa</option><option>JazzCash</option></select></div><div><label>Date</label><input id="payDate" type="date" value="${dateStr()}"></div></div><button class="btn primary" style="margin-top:15px" onclick="savePayment()">Save Payment</button></div>`);if(party)$('payParty').value=party}
+function switchPayParty(){let t=$('payType').value;$('payParty').innerHTML=t==='customer'?customerOptions():supplierOptions()}
+function savePayment(){let t=$('payType').value,id=$('payParty').value,a=+$('payAmount').value||0,arr=t==='customer'?db.customers:db.suppliers,p=arr.find(x=>x.id===id);if(!p||a<=0)return alert('Enter valid payment');if(a>p.balance)a=p.balance;p.balance-=a;db.payments.push({id:uid('pay'),date:$('payDate').value,type:t,party:id,amount:a,method:$('payMethod').value,ref:'MANUAL'});save();closeModal();renderAll()}
+function openExpense(){openModal('Add Expense',`<div class="form"><div class="formgrid"><div><label>Category</label><select id="e_cat"><option>Transport</option><option>Loading / Unloading</option><option>Rent</option><option>Electricity</option><option>Salary</option><option>Packaging</option><option>Other</option></select></div><div><label>Date</label><input id="e_date" type="date" value="${dateStr()}"></div><div><label>Amount</label><input id="e_amount" type="number" step=".01"></div><div><label>Description</label><input id="e_desc"></div></div><button class="btn primary" style="margin-top:15px" onclick="saveExpense()">Save Expense</button></div>`)}
+function saveExpense(){let a=+$('e_amount').value||0;if(a<=0)return alert('Enter amount');db.expenses.push({id:uid('e'),date:$('e_date').value,category:$('e_cat').value,amount:a,description:$('e_desc').value});save();closeModal();renderAll()}
+function openReturn(){openModal('New Return',`<div class="form"><div class="formgrid"><div><label>Return Type</label><select id="r_type"><option>Sales Return</option><option>Purchase Return</option></select></div><div><label>Date</label><input id="r_date" type="date" value="${dateStr()}"></div><div><label>Invoice Reference</label><input id="r_invoice"></div><div><label>Product</label><select id="r_product">${productOptions()}</select></div><div><label>Quantity</label><input id="r_qty" type="number" step=".01" value="1"></div><div><label>Amount</label><input id="r_amount" type="number" step=".01" value="0"></div></div><button class="btn primary" style="margin-top:15px" onclick="saveReturn()">Save Return</button></div>`)}
+function saveReturn(){let type=$('r_type').value,p=db.products.find(x=>x.id===$('r_product').value),q=+$('r_qty').value||0,a=+$('r_amount').value||0;if(!p||q<=0)return alert('Invalid return');p.stock+=type==='Sales Return'?q:-q;db.returns.push({id:uid('ret'),date:$('r_date').value,type,invoice:$('r_invoice').value,product:p.id,qty:q,amount:a});save();closeModal();renderAll()}
+function viewInvoice(id){
+ let s=db.sales.find(x=>x.id===id);if(!s)return;
+ const logo=db.settings.logo?`<img class="invoice-logo" src="${db.settings.logo}">`:'';
+ openModal('Invoice '+s.no,`<div class="invoice" id="printArea">
+ <div class="invoice-head">
+   <div class="invoice-brand">${logo}<div><div class="invoice-title">${esc(db.settings.business)}</div><div class="invoice-meta">Distribution & Wholesale POS</div><span class="invoice-badge">TAX INVOICE</span></div></div>
+   <div class="text-right invoice-meta"><b style="font-size:14px;color:#172033">${s.no}</b><br>${s.date}<br><br><b>Customer</b><br>${esc(nameOf(db.customers,s.customer))}</div>
+ </div>
+ <table class="table"><tr><th>#</th><th>Product</th><th>Qty</th><th>Rate</th><th>Amount</th></tr>${s.items.map((i,n)=>`<tr><td>${n+1}</td><td><b>${esc(nameOf(db.products,i.product))}</b></td><td>${i.qty}</td><td>${money(i.rate)}</td><td>${money(i.qty*i.rate)}</td></tr>`).join('')}</table>
+ <div style="max-width:320px;margin:18px 0 0 auto">
+   <div class="totalrow"><span>Subtotal</span><b>${money(s.subtotal)}</b></div>
+   <div class="totalrow"><span>Discount</span><b>${money(s.discount)}</b></div>
+   <div class="totalrow grand"><span>Grand Total</span><b>${money(s.total)}</b></div>
+   <div class="totalrow"><span>Advance / Paid</span><b>${money(s.paid)}</b></div>
+   <div class="totalrow"><span>Balance Due</span><b>${money(s.balance)}</b></div>
+ </div>
+ <div style="margin-top:22px;padding-top:12px;border-top:1px solid #ddd;display:flex;justify-content:space-between;gap:15px;font-size:11px;color:#667085">
+   <span>Payment: ${esc(s.method)}</span><span>${esc((db.settings.footer||'').replace(/\s*Powered by\s+NAXACORE\s*$/i,'').trim())}</span>
+ </div>
+ <div style="margin-top:8px;text-align:center;font-size:10px;color:#8a94a6;font-weight:700">Powered by NAXACORE</div>
+  </div><div class="no-print" style="text-align:right;margin-top:12px"><button class="btn primary" onclick="printInvoice()">🖨 Print Invoice</button></div>`)
+}
+function printInvoice(){
+ let w=window.open('','_blank');
+ w.document.write(`<html><head><title>Invoice</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>
+ body{font-family:Arial,sans-serif;padding:28px;color:#172033}.invoice{max-width:800px;margin:auto;border:1px solid #ddd;padding:24px;border-radius:12px}
+ .invoice-head{display:flex;justify-content:space-between;border-bottom:2px solid #222;padding-bottom:14px;margin-bottom:16px}.invoice-brand{display:flex;gap:12px;align-items:center}
+ .invoice-logo{width:60px;height:60px;object-fit:contain}.brand-logo{width:60px;height:60px;background:#1769e0;color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px}
+ .invoice-title{font-size:24px;font-weight:700}.invoice-meta{font-size:12px;color:#667085}.invoice-badge{display:inline-block;margin-top:5px;padding:4px 8px;border-radius:12px;background:#edf5ff;color:#1769e0;font-size:10px;font-weight:bold}
+ table{width:100%;border-collapse:collapse;margin-top:15px}th,td{padding:9px;border-bottom:1px solid #ddd;text-align:left}th{background:#f6f6f6}
+ .text-right{text-align:right}.totalbox{margin-left:auto;width:300px}.totalrow{display:flex;justify-content:space-between;padding:5px}.grand{font-size:18px;font-weight:bold;border-top:1px solid #222;margin-top:5px}
+ .nexacore-print{max-width:800px;margin:10px auto 0;padding-top:8px;border-top:1px solid #ddd;text-align:center;font-size:10px;color:#8a94a6;font-weight:700}@media(max-width:600px){body{padding:8px}.invoice{padding:12px}.invoice-title{font-size:17px}.invoice-logo,.brand-logo{width:45px;height:45px}.invoice-head{gap:8px}.invoice table{font-size:10px}.invoice table th,.invoice table td{padding:6px 4px}.totalbox{width:100%;margin-top:12px}}
+ </style></head><body>${$('printArea').outerHTML}<div class="nexacore-print">Powered by NAXACORE</div></body></html>`);
+ w.document.close();w.focus();setTimeout(()=>w.print(),250)
+}
+function viewPurchase(id){let s=db.purchases.find(x=>x.id===id);openModal('Purchase '+s.no,`<div class="invoice"><h2>${esc(db.settings.business)}</h2><p><b>Supplier:</b> ${esc(nameOf(db.suppliers,s.supplier))}<br><b>Date:</b> ${s.date}<br><b>Invoice:</b> ${s.no}</p><table class="table"><tr><th>Product</th><th>Qty</th><th>Rate</th><th>Amount</th></tr>${s.items.map(i=>`<tr><td>${esc(nameOf(db.products,i.product))}</td><td>${i.qty}</td><td>${money(i.rate)}</td><td>${money(i.qty*i.rate)}</td></tr>`).join('')}</table><h3 class="text-right">Total: ${money(s.total)}</h3><p class="text-right">Paid: ${money(s.paid)} &nbsp; Balance: ${money(s.balance)}</p></div>`)}
+function ledgerCustomer(id){let c=db.customers.find(x=>x.id===id);let sales=db.sales.filter(x=>x.customer===id);let pays=db.payments.filter(x=>x.type==='customer'&&x.party===id);openModal('Customer Ledger — '+c.name,`<div class="table-wrap"><table class="table"><tr><th>Date</th><th>Reference</th><th>Debit</th><th>Credit</th></tr>${sales.map(x=>`<tr><td>${x.date}</td><td>${x.no}</td><td>${money(x.total)}</td><td>—</td></tr>`).join('')}${pays.map(x=>`<tr><td>${x.date}</td><td>${x.ref}</td><td>—</td><td>${money(x.amount)}</td></tr>`).join('')}</table></div><h3 class="text-right">Outstanding: ${money(c.balance)}</h3>`)}
+function ledgerSupplier(id){let c=db.suppliers.find(x=>x.id===id);let sales=db.purchases.filter(x=>x.supplier===id);let pays=db.payments.filter(x=>x.type==='supplier'&&x.party===id);openModal('Supplier Ledger — '+c.name,`<div class="table-wrap"><table class="table"><tr><th>Date</th><th>Reference</th><th>Credit</th><th>Payment</th></tr>${sales.map(x=>`<tr><td>${x.date}</td><td>${x.no}</td><td>${money(x.total)}</td><td>—</td></tr>`).join('')}${pays.map(x=>`<tr><td>${x.date}</td><td>${x.ref}</td><td>—</td><td>${money(x.amount)}</td></tr>`).join('')}</table></div><h3 class="text-right">Payable: ${money(c.balance)}</h3>`)}
+function exportBackup(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='nexapos-backup-'+dateStr()+'.json';a.click();URL.revokeObjectURL(a.href)}
+function importBackup(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.products||!x.sales)throw Error();db=x;save();renderAll();alert('Backup imported successfully.')}catch{alert('Invalid backup file.')}};r.readAsText(f)}
+function clearData(){if(confirm('This will permanently remove all local data. Continue?')){localStorage.removeItem(KEY);location.reload()}}
+
+function renderDeliveries(){$('deliveriesTable').innerHTML=db.deliveries.length?`<div class="table-wrap"><table class="table"><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>Driver</th><th>Vehicle</th><th>Status</th></tr>${db.deliveries.slice().reverse().map(x=>`<tr><td>${x.date}</td><td>${x.invoice}</td><td>${esc(nameOf(db.customers,x.customer))}</td><td>${esc(x.driver)}</td><td>${esc(x.vehicle)}</td><td><span class="badge ${x.status==='Delivered'?'green':'blue'}">${x.status}</span></td></tr>`).join('')}</table></div>`:'<div class="empty">No deliveries.</div>'}
+function openDelivery(){openModal('New Delivery',`<div class="form"><div class="formgrid"><div><label>Invoice</label><input id="d_invoice"></div><div><label>Customer</label><select id="d_customer">${customerOptions()}</select></div><div><label>Driver / Delivery Boy</label><input id="d_driver"></div><div><label>Vehicle No.</label><input id="d_vehicle"></div><div><label>Status</label><select id="d_status"><option>Pending</option><option>Packed</option><option>Out for Delivery</option><option>Delivered</option></select></div><div><label>Date</label><input id="d_date" type="date" value="${dateStr()}"></div></div><button class="btn primary" style="margin-top:15px" onclick="saveDelivery()">Save Delivery</button></div>`)}
+function saveDelivery(){db.deliveries.push({id:uid('d'),date:$('d_date').value,invoice:$('d_invoice').value,customer:$('d_customer').value,driver:$('d_driver').value,vehicle:$('d_vehicle').value,status:$('d_status').value});save();closeModal();renderAll()}
+function renderSalesmen(){$('salesmenTable').innerHTML=db.salesmen.length?`<table class="table"><tr><th>Name</th><th>Phone</th><th>Commission %</th><th>Sales</th><th>Commission</th></tr>${db.salesmen.map(x=>{let a=db.sales.filter(s=>s.salesman===x.id);let total=sum(a.map(s=>s.total));return `<tr><td>${esc(x.name)}</td><td>${esc(x.phone)}</td><td>${x.commission}%</td><td>${money(total)}</td><td>${money(total*x.commission/100)}</td></tr>`}).join('')}</table>`:'<div class="empty">No salesmen.</div>'}
+function openSalesman(){openModal('Add Salesman',`<div class="form"><div class="formgrid"><div><label>Name</label><input id="sm_name"></div><div><label>Phone</label><input id="sm_phone"></div><div><label>Commission %</label><input id="sm_comm" type="number" step=".01" value="2"></div></div><button class="btn primary" style="margin-top:15px" onclick="saveSalesman()">Save Salesman</button></div>`)}
+function saveSalesman(){db.salesmen.push({id:uid('sm'),name:$('sm_name').value,phone:$('sm_phone').value,commission:+$('sm_comm').value||0});save();closeModal();renderAll()}
+function renderWarehouses(){$('warehousesTable').innerHTML=`<table class="table"><tr><th>Warehouse</th><th>Location</th><th>Products</th><th>Stock Value</th></tr>${db.warehouses.map(w=>`<tr><td>${esc(w.name)}</td><td>${esc(w.location)}</td><td>${db.products.length}</td><td>${money(sum(db.products.map(p=>p.stock*p.purchase)))}</td></tr>`).join('')}</table>`}
+function openWarehouse(){openModal('Add Warehouse',`<div class="form"><div class="formgrid"><div><label>Warehouse Name</label><input id="w_name"></div><div><label>Location</label><input id="w_loc"></div></div><button class="btn primary" style="margin-top:15px" onclick="saveWarehouse()">Save Warehouse</button></div>`)}
+function saveWarehouse(){db.warehouses.push({id:uid('w'),name:$('w_name').value,location:$('w_loc').value});save();closeModal();renderAll()}
+function renderBatches(){$('batchesTable').innerHTML=db.batches.length?`<table class="table"><tr><th>Batch</th><th>Product</th><th>Expiry</th><th>Qty</th><th>Status</th></tr>${db.batches.map(x=>{let days=(new Date(x.expiry)-new Date())/86400000;return `<tr><td>${x.batch}</td><td>${esc(nameOf(db.products,x.product))}</td><td>${x.expiry}</td><td>${x.qty}</td><td><span class="badge ${days<0?'red':days<30?'red':'green'}">${days<0?'Expired':days<30?'Expiring Soon':'Good'}</span></td></tr>`}).join('')}</table>`:'<div class="empty">No batches.</div>'}
+function openBatch(){openModal('Add Batch',`<div class="form"><div class="formgrid"><div><label>Product</label><select id="b_product">${productOptions()}</select></div><div><label>Batch Number</label><input id="b_batch"></div><div><label>Expiry Date</label><input id="b_expiry" type="date"></div><div><label>Quantity</label><input id="b_qty" type="number" step=".01"></div></div><button class="btn primary" style="margin-top:15px" onclick="saveBatch()">Save Batch</button></div>`)}
+function saveBatch(){db.batches.push({id:uid('b'),product:$('b_product').value,batch:$('b_batch').value,expiry:$('b_expiry').value,qty:+$('b_qty').value||0});save();closeModal();renderAll()}
+function renderCashbook(){$('cashbookTable').innerHTML=`<div class="cards" style="margin-bottom:15px"><div class="card metric"><div><span>Cash In</span><strong>${money(sum(db.cashbook.filter(x=>x.direction==='in').map(x=>x.amount)))}</strong></div><i>⬆️</i></div><div class="card metric"><div><span>Cash Out</span><strong>${money(sum(db.cashbook.filter(x=>x.direction==='out').map(x=>x.amount)))}</strong></div><i>⬇️</i></div><div class="card metric"><div><span>Net Cash</span><strong>${money(sum(db.cashbook.map(x=>x.direction==='in'?x.amount:-x.amount)))}</strong></div><i>💵</i></div></div><table class="table"><tr><th>Date</th><th>Direction</th><th>Category</th><th>Description</th><th>Amount</th></tr>${db.cashbook.slice().reverse().map(x=>`<tr><td>${x.date}</td><td>${x.direction}</td><td>${esc(x.category)}</td><td>${esc(x.description)}</td><td>${money(x.amount)}</td></tr>`).join('')}</table>`}
+function openCashEntry(){openModal('Cash Book Entry',`<div class="form"><div class="formgrid"><div><label>Direction</label><select id="cb_dir"><option value="in">Cash In</option><option value="out">Cash Out</option></select></div><div><label>Date</label><input id="cb_date" type="date" value="${dateStr()}"></div><div><label>Category</label><input id="cb_cat" placeholder="Customer collection, expense..."></div><div><label>Amount</label><input id="cb_amt" type="number" step=".01"></div><div class="full"><label>Description</label><input id="cb_desc"></div></div><button class="btn primary" style="margin-top:15px" onclick="saveCashEntry()">Save Entry</button></div>`)}
+function saveCashEntry(){let a=+$('cb_amt').value||0;if(a<=0)return alert('Enter amount');db.cashbook.push({id:uid('cb'),direction:$('cb_dir').value,date:$('cb_date').value,category:$('cb_cat').value,amount:a,description:$('cb_desc').value});save();closeModal();renderAll()}
+
+const RIGHT_NAMES={dashboard:'Dashboard',sales:'Sales / POS',purchases:'Purchases',products:'Products',customers:'Customers',suppliers:'Suppliers',payments:'Payments',expenses:'Expenses',returns:'Returns',deliveries:'Deliveries',salesmen:'Salesmen',warehouses:'Warehouses',batches:'Batches & Expiry',cashbook:'Cash Book',reports:'Reports',users:'Users & Roles',settings:'Settings'};
+function renderUsers(){
+ $('usersTable').innerHTML=`<div class="table-wrap"><table class="table"><tr><th>User</th><th>Username</th><th>Role</th><th>Rights</th><th>Action</th></tr>${db.users.map(x=>{let rs=Object.keys(RIGHT_NAMES).filter(k=>x.rights&&x.rights[k]).length;return `<tr><td><b>${esc(x.name)}</b></td><td>${esc(x.username)}</td><td><span class="badge blue">${esc(x.role)}</span></td><td>${rs}/${Object.keys(RIGHT_NAMES).length}</td><td>${x.username==='admin'?'<span class="muted">Protected</span>':`<button class="btn small" onclick="deleteUser('${x.id}')">Delete</button>`}</td></tr>`}).join('')}</table></div>`
+}
+function openUser(){
+ let rights=Object.entries(RIGHT_NAMES).map(([k,v])=>`<label><input type="checkbox" id="right_${k}" checked> ${v}</label>`).join('');
+ openModal('Create User Account',`<div class="form"><div class="formgrid">
+ <div><label>Full Name</label><input id="u_name"></div>
+ <div><label>Username</label><input id="u_username" placeholder="e.g. cashier01"></div>
+ <div><label>Password</label><div style="display:flex;gap:7px"><input id="u_password" type="password" value="1234" autocomplete="new-password" style="flex:1"><button type="button" class="btn small" onclick="togglePassword('u_password',this)">Show</button></div></div>
+ <div><label>Role</label><select id="u_role"><option>Admin</option><option>Manager</option><option>Cashier</option><option>Salesman</option><option>Storekeeper</option></select></div>
+ <div class="full"><label>Access Rights</label><div class="rights-grid">${rights}</div></div>
+ </div><button class="btn primary" style="margin-top:15px" onclick="saveUser()">Create Login</button></div>`)
+}
+function saveUser(){
+ let username=normalizeUser($('u_username').value), password=$('u_password').value;
+ if(!username||!$('u_name').value.trim()||!password)return alert('Name, username and password are required.');
+ if(username==='admin')return alert('Username admin is reserved for the main administrator.');
+ if(db.users.some(x=>normalizeUser(x.username)===username))return alert('Username already exists.');
+ let rights={};Object.keys(RIGHT_NAMES).forEach(k=>rights[k]=$('right_'+k).checked);
+ db.users.push({id:uid('u'),name:$('u_name').value.trim(),username,password,role:$('u_role').value,rights});
+ save();closeModal();renderAll()
+}
+function deleteUser(id){if(confirm('Delete this user account?')){db.users=db.users.filter(x=>x.id!==id);save();renderAll()}}
+function togglePassword(id,btn){const el=$(id);if(!el)return;el.type=el.type==='password'?'text':'password';btn.textContent=el.type==='password'?'Show':'Hide'}
+function normalizeUser(u){return (u||'').trim().toLowerCase()}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&$('loginScreen')&&$('loginScreen').style.display!=='none')doLogin()});
+function doLogin(){
+ let username=normalizeUser($('loginUsername').value), password=$('loginPassword').value;
+ $('loginError').textContent='';
+ if(!username||!password){$('loginError').textContent='Username aur password dono enter karein.';return}
+ let user=db.users.find(x=>normalizeUser(x.username)===username && String(x.password)===password);
+ if(!user){$('loginError').textContent='Invalid username or password.';return}
+ window.currentUser=user;sessionStorage.setItem('nexaposUser',user.id);$('loginScreen').style.display='none';applyRights();renderAll();
+}
+function logout(){sessionStorage.removeItem('nexaposUser');window.currentUser=null;location.reload()}
+function applyRights(){
+ let u=window.currentUser;if(!u)return;
+ document.querySelectorAll('[data-page]').forEach(btn=>{let page=btn.dataset.page;btn.style.display=(u.role==='Admin'||u.rights?.[page])?'':'none'});
+ let settingsBtn=document.querySelector('[data-page="backup"]');if(settingsBtn)settingsBtn.style.display=(u.role==='Admin'||u.rights?.settings)?'':'none';
+ let userName=document.querySelector('#currentUserName');if(userName)userName.textContent=u.name;
+}
+function initLogin(){
+ let id=sessionStorage.getItem('nexaposUser'),u=db.users.find(x=>x.id===id);
+ if(u){window.currentUser=u;$('loginScreen').style.display='none';applyRights()}
+ let logo=db.settings.logo;if(logo){$('loginLogo').innerHTML=`<img src="${logo}">`}
+ $('loginBusiness').textContent=db.settings.business||'NEXAPOS'
+}
+function loadSettings(){
+ $('bizName').value=db.settings.business;$('currency').value=db.settings.currency;$('invoiceFooter').value=db.settings.footer;if($('invoiceTemplate'))$('invoiceTemplate').value=db.settings.invoiceTemplate;if($('taxRate'))$('taxRate').value=db.settings.taxRate;
+ $('logoPreview').innerHTML=db.settings.logo?`<img src="${db.settings.logo}" style="width:72px;height:72px;object-fit:contain;border:1px solid var(--line);border-radius:10px;padding:5px">`:'<span style="color:var(--muted);font-size:12px">No logo uploaded</span>';
+ updateBrandLogo();if($('loginLogo'))$('loginLogo').innerHTML=db.settings.logo?`<img src="${db.settings.logo}">`:'';if($('loginBusiness'))$('loginBusiness').textContent=db.settings.business||'NEXAPOS';
+}
+function previewLogo(e){
+ const f=e.target.files[0];if(!f)return;
+ if(f.size>2*1024*1024)return alert('Logo should be under 2MB.');
+ const r=new FileReader();r.onload=()=>{$('logoPreview').innerHTML=`<img src="${r.result}" style="width:72px;height:72px;object-fit:contain;border:1px solid var(--line);border-radius:10px;padding:5px">`;window._newLogo=r.result};r.readAsDataURL(f)
+}
+function updateBrandLogo(){const el=$('brandLogo');if(!el)return;el.innerHTML=db.settings.logo?`<img src="${db.settings.logo}">`:''}
+function saveSettings(){
+ db.settings.business=$('bizName').value||'NEXAPOS Distributors';db.settings.currency=$('currency').value||'PKR';db.settings.footer=($('invoiceFooter').value||'').replace(/\s*Powered by\s+NAXACORE\s*$/i,'').trim();db.settings.invoiceTemplate=$('invoiceTemplate')?.value||'Modern';db.settings.taxRate=+$('taxRate')?.value||0;
+ if(window._newLogo!==undefined){db.settings.logo=window._newLogo;window._newLogo=undefined}
+ save();renderAll();initLogin();alert('Settings saved.')
+}
+renderAll();
+initLogin();
+</script>
+</body>
+</html>
